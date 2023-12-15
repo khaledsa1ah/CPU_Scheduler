@@ -70,12 +70,12 @@ public class PrioritySchedulingAlgorithm {
 
         }
 
-        double avgWaitingTime = processedProcesses > 0 ? (double) totalWaitingTime / processedProcesses : 0;
-        double avgTurnaroundTime = processedProcesses > 0 ? (double) totalTurnaroundTime / processedProcesses : 0;
+        averageWaitingTime = processedProcesses > 0 ? (double) totalWaitingTime / processedProcesses : 0;
+        averageTurnAroundTime = processedProcesses > 0 ? (double) totalTurnaroundTime / processedProcesses : 0;
 
         System.out.println("\nPriority Scheduling Results:");
-        System.out.println("Average Waiting Time: " + avgWaitingTime);
-        System.out.println("Average Turnaround Time: " + avgTurnaroundTime);
+        System.out.println("Average Waiting Time: " + averageWaitingTime);
+        System.out.println("Average Turnaround Time: " + averageTurnAroundTime);
     }
 
     public Map<Process, List<Interval>> returnIntervals() {
