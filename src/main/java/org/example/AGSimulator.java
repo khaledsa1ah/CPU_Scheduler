@@ -180,10 +180,10 @@ public class AGSimulator {
                 }
 
                 List<Interval> processIntervals = intervals.get(currentProcess);
-                if (!processIntervals.isEmpty() && processIntervals.get(processIntervals.size() - 1).getEnd() == i - 1) {
-                    processIntervals.get(processIntervals.size() - 1).setEnd(i);
+                if (!processIntervals.isEmpty() && processIntervals.get(processIntervals.size() - 1).getEnd() == i) {
+                    processIntervals.get(processIntervals.size() - 1).setEnd(i+1);
                 } else {
-                    processIntervals.add(new Interval(i, i));
+                    processIntervals.add(new Interval(i, i+1));
                 }
             }
         }

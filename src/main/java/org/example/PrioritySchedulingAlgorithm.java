@@ -56,10 +56,6 @@ public class PrioritySchedulingAlgorithm {
                 currentProcess.endTime = currentTime;
                 processes.remove(currentProcess);
 
-//                Interval interval = new Interval(currentTime - currentProcess.burstTime, currentTime);
-//                List<Interval> processIntervals = intervals.computeIfAbsent(currentProcess, k -> new ArrayList<>());
-//                processIntervals.add(interval);
-
                 System.out.println("Process " + currentProcess.name + " executed from " +
                         (currentTime - currentProcess.burstTime) + " to " + currentTime);
 

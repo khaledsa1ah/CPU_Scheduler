@@ -44,6 +44,7 @@ public class SchedulerSimulation {
 //
 //        System.out.print("Enter context switching time: ");
 //        int contextSwitchingTime = scanner.nextInt();
+        int contextSwitchTime = 2;
 //
 //        List<Process> processes = new ArrayList<>();
 //        for (int i = 0; i < numProcesses; i++) {
@@ -119,7 +120,7 @@ public class SchedulerSimulation {
             avgWaitingTime = s.averageWaitingTime;
             intervals = s.returnIntervals();
         } else if (algorithmName.equals("SJF")) {
-            SJFAlgorithm sjf = new SJFAlgorithm(list);
+            SJFAlgorithm sjf = new SJFAlgorithm(list, contextSwitchTime);
             sjf.simulateSJF();
             avgTurnaroundTime = sjf.averageTurnaroundTime;
             avgWaitingTime = sjf.averageWaitingTime;

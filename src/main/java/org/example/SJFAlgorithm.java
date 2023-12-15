@@ -3,11 +3,13 @@ package org.example;
 import java.util.*;
 
 public class SJFAlgorithm {
+    int contextSwitchTime;
     double averageWaitingTime = 0, averageTurnaroundTime = 0;
     List<Process> processes;
     Process[] timeProcesses = new Process[1000];
-    public SJFAlgorithm(List<Process> processes){
+    public SJFAlgorithm(List<Process> processes, int contextSwitchTime){
         this.processes = processes;
+        this.contextSwitchTime = contextSwitchTime;
     }
     public void simulateSJF() {
         // Sort processes based on arrival time
@@ -36,12 +38,10 @@ public class SJFAlgorithm {
 
             for (int i = 0; i < processes.size(); i++) {
                 if(processes.get(i).arrivalTime<=currentTime){
+                    currentTime+=contextSwitchTime;
                     break;
                 }
             }
-//            // If there are more waiting process  ---> Add context Switch Time
-//            if(queue.size()>1)
-//                currentTime+=contextSwitchingTime;
             averageWaitingTime += process.waitingTime;
             averageTurnaroundTime += process.turnaroundTime;
             System.out.println("Process: " + process.name + " Waiting Time = " + process.waitingTime + " Turnaround Time = " + process.turnaroundTime);
