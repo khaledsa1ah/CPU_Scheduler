@@ -31,7 +31,7 @@ public class SchedulerSimulation {
         return colors;
     }
 
-    public void run(CPUSchedulingSimulator cpuSchedulingSimulator) {
+    public void run(GUITimeLine GUITimeLine) {
 
         Scanner scanner = new Scanner(System.in);
 //
@@ -128,7 +128,7 @@ public class SchedulerSimulation {
         }
 
         rows = returnRows(intervals);
-        cpuSchedulingSimulator.excute(algorithmName, avgTurnaroundTime, avgWaitingTime, rows, intervals, processesColor);
+        GUITimeLine.excute(algorithmName, avgTurnaroundTime, avgWaitingTime, rows, intervals, processesColor);
     }
 
 }

@@ -13,18 +13,18 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
-public class CPUSchedulingSimulator extends JFrame {
+public class GUITimeLine extends JFrame {
     // Scheduling Parameter
     private static JFrame main;
 
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new CPUSchedulingSimulator().setVisible(true);
+            new GUITimeLine().setVisible(true);
         });
     }
 
-    public CPUSchedulingSimulator() {
+    public GUITimeLine() {
         initComponents();
         chartPanel.setVisible(false);
         dataPanel.setVisible(false);
@@ -32,9 +32,7 @@ public class CPUSchedulingSimulator extends JFrame {
         jPanel1.setVisible(false);
         jSchedulingLabel.setVisible(false);
         jScrollPane1.setVisible(false);
-        jScrollPane2.setVisible(false);
         jTable1.setVisible(false);
-        jTable2.setVisible(false);
         jTurnLabel.setVisible(false);
         jTurnaroundLabel.setVisible(false);
         jWaitingLabel.setVisible(false);
@@ -48,32 +46,21 @@ public class CPUSchedulingSimulator extends JFrame {
         this.setResizable(true);
         this.setLocationRelativeTo(null);
 
-        this.jSchedulingLabel.setText(SchedulingType);
-        if (SchedulingType.equals("AG"))
-            this.jScrollPane2.setVisible(true);
-        if (SchedulingType.equals("AG"))
-            this.jTable2.setVisible(true);
+        this.jSchedulingLabel.setText("");
+
         this.jTurnLabel.setText(String.valueOf(AverageTT));
         this.jWaitingLabel.setText(String.valueOf(AverageWT));
-        GanttChart chart = new GanttChart();
+        Timeline chart = new Timeline();
         IntervalCategoryDataset dataset = getCategoryDataset(processesList);
         this.jTable1.setModel(new DefaultTableModel(timeArray,
                 new String[]{
-                        "Process", "PID", "ArrivalT", "FinishT", "TurnaroundT", "WaitingT"
+                        "Process", "Arrival Time", "Finish Time", "Turn around Time", "Waiting Time"
                 }
         ));
         this.jTable1.setShowGrid(true);
         this.jTable1.setEnabled(false);
         this.jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-//        this.jTable2.setModel(new DefaultTableModel(
-//                CPUSchedulingSimulator.scheduling.getQuantumRows(),
-//                new String [] {
-//                        "Process", "Current Time", "Quantum Before", "Quantum After"
-//                }
-//        ));
-        this.jTable2.setEnabled(false);
-        this.jTable2.setShowGrid(true);
-        chart.setDataset(dataset, processesColor, "CPU Scheduling Gantt Chart", "Timeline", "Process");
+        chart.setDataset(dataset, processesColor, "CPU Timeline", "Timeline", "Process");
         this.chartPanel.add(chart);
     }
 
@@ -89,8 +76,6 @@ public class CPUSchedulingSimulator extends JFrame {
         jOverheadLabel = new JLabel();
         jTurnaroundLabel = new JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new JTable();
 
@@ -126,24 +111,7 @@ public class CPUSchedulingSimulator extends JFrame {
         jTurnaroundLabel.setForeground(new Color(0, 0, 0));
         jTurnaroundLabel.setText("Average Turnaround Time : ");
 
-        jTable2.setModel(new DefaultTableModel(
-                new Object[][]{
 
-                },
-                new String[]{
-                        "Process", "Current Time", "Quantum Before", "Quantum After"
-                }
-        ) {
-            Class[] types = new Class[]{
-                    String.class, Object.class, Object.class, Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types[columnIndex];
-            }
-        });
-        jTable2.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jScrollPane2.setViewportView(jTable2);
 
         jTable1.setModel(new DefaultTableModel(
                 new Object[][]{
@@ -183,7 +151,7 @@ public class CPUSchedulingSimulator extends JFrame {
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(0, 0, Short.MAX_VALUE))
-                                        .addComponent(jScrollPane2))
+                                        )
                                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -192,7 +160,7 @@ public class CPUSchedulingSimulator extends JFrame {
                                 .addContainerGap()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+
                                 .addContainerGap())
         );
 
@@ -311,9 +279,8 @@ public class CPUSchedulingSimulator extends JFrame {
     private javax.swing.JPanel jPanel1;
     private JLabel jSchedulingLabel;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+//    private javax.swing.JScrollPane jScrollPane2;
     private JTable jTable1;
-    private JTable jTable2;
     private JLabel jTurnLabel;
     private JLabel jTurnaroundLabel;
     private JLabel jWaitingLabel;

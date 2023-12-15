@@ -10,6 +10,7 @@ public class AGSimulator {
     List<Process> processes;
     List<Process> readyQueue = new ArrayList<>();
     Process[] timeProcesses = new Process[1000];
+    Map<String,List<Integer>> quantumHistory = new HashMap<>();
     List<Process> dieList = new ArrayList<>();
     static int currentTime = 0;
 
@@ -21,6 +22,7 @@ public class AGSimulator {
 
 
     public void run(){
+        addToQuantumHistory();
         processes.sort(Comparator.comparingInt(p -> p.arrivalTime));
 
         for (int i = 0; i < processes.size(); i++)
@@ -49,6 +51,26 @@ public class AGSimulator {
     }
 
 
+    void addToQuantumHistory(){
+
+
+        for (int i = 0; i < processes.size(); i++) {
+            Process p = processes.get(i);
+            if(!quantumHistory.containsKey(p.name)){
+                quantumHistory.put(p.name, new ArrayList<>());
+            }
+//            quantumHistory.get(p.name).add(p.quantumTime);
+        }
+
+//        for (int i = 0; i < readyQueue.size(); i++) {
+//            Process p = processes.get(i);
+//            if(!quantumHistory.containsKey(p.name)){
+//                quantumHistory.put(p.name, new ArrayList<>());
+//            }
+//            quantumHistory.get(p.name).add(p.quantumTime);
+//        }
+
+    }
     void refreshReadyQueue(){
         for (int i = 0; i < processes.size(); i++) {
             if(processes.get(i).burstTime > 0 && currentTime >= processes.get(i).arrivalTime){
@@ -71,6 +93,8 @@ public class AGSimulator {
     }
     public void runProcess(Process p){
 
+        quantumHistory.get(p.name).add(p.quantumTime);
+//        addToQuantumHistory();
 //        if(p.burstTime == 0)return;
 
         int tempQuantumTime = p.quantumTime;
@@ -78,6 +102,7 @@ public class AGSimulator {
         int ceilQuantum = (tempQuantumTime + 1) / 2;
 
         for (int i = 0; i < ceilQuantum; i++) {
+//            addToQuantumHistory();
             if(p.burstTime == 0){
                 p.quantumTime = 0;
                 dieList.add(p);
@@ -108,7 +133,7 @@ public class AGSimulator {
 //        p.burstTime = Math.max(0, p.burstTime - ceilQuantum);
 
         for (int i = ceilQuantum; i < tempQuantumTime; i++) {
-
+//            addToQuantumHistory();
             refreshReadyQueue();
             int minimumValue = p.agFactor, minimumIndex = -1;
             for (int j = 0; j < readyQueue.size(); j++) {
@@ -188,10 +213,21 @@ public class AGSimulator {
             }
         }
 
-        for (Map.Entry<Process, List<Interval>> entry : intervals.entrySet()) {
-            for (Interval interval : entry.getValue()) {
-                System.out.println(entry.getKey().name + " : " + interval.getStart() + " - " + interval.getEnd());
+//        for (Map.Entry<Process, List<Interval>> entry : intervals.entrySet()) {
+//            for (Interval interval : entry.getValue()) {
+//                System.out.println(entry.getKey().name + " : " + interval.getStart() + " - " + interval.getEnd());
+//            }
+//        }
+
+        for (Map.Entry<String, List<Integer>> entry : quantumHistory.entrySet()) {
+            String key = entry.getKey();
+            List<Integer> values = entry.getValue();
+
+            System.out.print(key + " : ");
+            for (int i = 0; i < values.size(); i++) {
+                System.out.print(values.get(i) + "-");
             }
+            System.out.println("0");
         }
         return intervals;
     }
