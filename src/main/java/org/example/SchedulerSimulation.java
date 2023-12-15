@@ -87,7 +87,6 @@ public class SchedulerSimulation {
         list.add(p2);
         list.add(p3);
         list.add(p4);
-//        list.add(p5);
 
 
         String algorithmName;
@@ -118,7 +117,7 @@ public class SchedulerSimulation {
             SRTFAlgorithm s = new SRTFAlgorithm(list);
             avgTurnaroundTime = s.averageTurnAroundTime;
             avgWaitingTime = s.averageWaitingTime;
-//            intervals = s.returnIntervals();
+            intervals = s.returnIntervals();
         } else if (algorithmName.equals("SJF")) {
             SJFAlgorithm sjf = new SJFAlgorithm(list);
             sjf.simulateSJF();

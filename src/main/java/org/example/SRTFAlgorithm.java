@@ -1,14 +1,17 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SRTFAlgorithm {
     public double averageWaitingTime;
     public double averageTurnAroundTime;
+    Process[] myList = new Process[1000];
 
-    List<Process> processes = new ArrayList<>();
+
+    List<Process> processes;
     public SRTFAlgorithm(List<Process> processes) {
         this.processes = processes;
         simulateSRTF();
@@ -42,7 +45,7 @@ public class SRTFAlgorithm {
     }
 
     // Function that return start and end for each process and waiting time
-    private int[] findWaitingTime(List<Process> processes, List<Integer> processTime, int[] waitingTime) {
+    private int[] findWaitingTime(List<Process> processes, int[] waitingTime) {
         int[] burstTime = new int[processes.size()];
 
         /*
@@ -78,7 +81,7 @@ public class SRTFAlgorithm {
                 }
             }
 
-            processTime.add(minimumIndex);
+            myList[currentTime] = processes.get(minimumIndex);
 
             // If we didn't find any process increment time and continue
             if (minimumIndex == -1) {
@@ -122,11 +125,10 @@ public class SRTFAlgorithm {
     }
 
     private void simulateSRTF() {
-        List<Integer> myList = new ArrayList<>();
         int[] waitingTime = new int[processes.size()];
         int[] turnAroundTime = new int[processes.size()];
 
-        findWaitingTime(processes, myList, waitingTime);
+        findWaitingTime(processes, waitingTime);
         findTurnAroundTime(processes, waitingTime, turnAroundTime);
 
         int totalWaitingTime = 0, totalTurnAroundTime = 0;
@@ -134,22 +136,44 @@ public class SRTFAlgorithm {
         for (int i = 0; i < processes.size(); i++) {
             totalWaitingTime += waitingTime[i];
             totalTurnAroundTime += turnAroundTime[i];
+            processes.get(i).waitingTime = waitingTime[i];
+            processes.get(i).turnaroundTime = turnAroundTime[i];
         }
 
         averageWaitingTime = totalWaitingTime / (double) processes.size();
         averageTurnAroundTime = totalTurnAroundTime / (double) processes.size();
 
-//        for (int i = 0; i < processes.size(); i++) {
-//            System.out.println(waitingTime[i] + " " + turnAroundTime[i]);
-//        }
-//
-//        for (int i = 0; i < myList.size(); i++) {
-//            System.out.println(i + "->" + (i + 1) + " " + processes.get(myList.get(i)).name + " ");
-//        }
+
+        for (int i = 0; i < myList.length; i++) {
+            if(myList[i] == null) break;
+            System.out.println(i + "->" + (i + 1) + " " + myList[i].name);
+        }
 
     }
 
-//    public Map<Process, List<Interval>> returnIntervals() {
-////        return null;
-//    }
+    public Map<Process, List<Interval>> returnIntervals() {
+        Map<Process, List<Interval>> intervals = new HashMap<>();
+
+
+        for (int i = 0; i < myList.length; i++) {
+            Process currentProcess = myList[i];
+
+            if (currentProcess != null) {
+                currentProcess.endTime = i;
+
+                if (!intervals.containsKey(currentProcess)) {
+                    intervals.put(currentProcess, new ArrayList<>());
+                }
+
+                List<Interval> processIntervals = intervals.get(currentProcess);
+                if (!processIntervals.isEmpty() && processIntervals.get(processIntervals.size() - 1).getEnd() == i) {
+                    processIntervals.get(processIntervals.size() - 1).setEnd(i + 1);
+                } else {
+                    processIntervals.add(new Interval(i, i + 1));
+                }
+            }
+        }
+
+        return intervals;
+    }
 }

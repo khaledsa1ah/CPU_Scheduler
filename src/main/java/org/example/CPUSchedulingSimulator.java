@@ -284,9 +284,6 @@ public class CPUSchedulingSimulator extends JFrame {
     }
 
     private static TaskSeries getTaskSeries(Process process, Date fixedTime, List<Interval> intervalList) {
-        System.out.println(process.name);
-//        System.out.println(process.arrivalTime);
-//        System.out.println(process.waitingTime);
 
 
         TaskSeries series = new TaskSeries(process.name);
@@ -297,8 +294,6 @@ public class CPUSchedulingSimulator extends JFrame {
                 startTime,
                 endTime);
         for (Interval interval : intervalList) {
-            System.out.println(interval.getStart());
-            System.out.println(interval.getEnd());
             task.addSubtask(
                     new Task(
                             process.name,
