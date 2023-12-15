@@ -35,12 +35,15 @@ public class Process {
         this.intervalList = new ArrayList<>();
     }
 
-    public Process(String name, Color color, int arrivalTime, int burstTime, int priority) {
+    public Process(String name, Color color, int arrivalTime, int burstTime, int priority, int quantumTime){
         this.name = name;
         this.color = color;
         this.arrivalTime = arrivalTime;
         this.burstTime = burstTime;
         this.priority = priority;
+        this.quantumTime = quantumTime;
+        agFactor = arrivalTime + burstTime;
+        calculateAGFactor();
     }
 
     private void calculateAGFactor() {
