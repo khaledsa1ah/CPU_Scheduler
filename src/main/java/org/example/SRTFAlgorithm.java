@@ -149,7 +149,7 @@ public class SRTFAlgorithm {
 
     }
 
-    public Map<Process, List<Interval>> returnIntervals() {
-
-    }
+//    public Map<Process, List<Interval>> returnIntervals() {
+////        return null;
+//    }
 }

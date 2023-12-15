@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-class StarvationValues{
+class StarvationValues {
     public final int lowStarvation = 1;
     public final int highStarvation = 128;
     public final int incrementTimeCycle = 15;
@@ -13,25 +13,27 @@ class StarvationValues{
 public class SchedulerSimulation {
 
 
-    public Object[][] returnRows(Map<Process, List<Interval>> intervals){
+    public Object[][] returnRows(Map<Process, List<Interval>> intervals) {
         int i = 0;
         Object[][] rows = new Object[intervals.size()][];
         for (Map.Entry<Process, List<Interval>> entry : intervals.entrySet()) {
-            Object[] row = {entry.getKey().name, 1, entry.getKey().arrivalTime , entry.getKey().endTime , entry.getKey().turnaroundTime , entry.getKey().waitingTime};
+            Object[] row = {entry.getKey().name, 1, entry.getKey().arrivalTime, entry.getKey().endTime, entry.getKey().turnaroundTime, entry.getKey().waitingTime};
             rows[i++] = row;
         }
         return rows;
     }
-    public Vector<Color> processesColor(List<Process> processList){
+
+    public Vector<Color> processesColor(List<Process> processList) {
         Vector<Color> colors = new Vector<>();
         for (int i = 0; i < processList.size(); i++) {
             colors.add(processList.get(i).color);
         }
         return colors;
     }
-    public void run(CPUSchedulingSimulator cpuSchedulingSimulator){
 
-                Scanner scanner = new Scanner(System.in);
+    public void run(CPUSchedulingSimulator cpuSchedulingSimulator) {
+
+        Scanner scanner = new Scanner(System.in);
 //
 //        // Input parameters
 //        System.out.print("Enter the number of processes: ");
@@ -70,18 +72,23 @@ public class SchedulerSimulation {
 //        AGSimulator a = new AGSimulator(processes);
 
 
+//        Process p1 = new Process("p1", Color.red, 0, 17, 4, 4, 20);
+//        Process p2 = new Process("p2", Color.green, 3, 6, 9, 4, 17);
+//        Process p3 = new Process("p3", Color.black, 4, 10, 2, 4, 16);
+//        Process p4 = new Process("p4", Color.yellow, 29, 4, 8, 4, 43);
+        Process p1 = new Process("p1", Color.red, 0, 10, 3, 4, 20);
+        Process p2 = new Process("p2", Color.green, 0, 1, 1, 4, 17);
+        Process p3 = new Process("p3", Color.black, 0, 2, 4, 4, 16);
+        Process p4 = new Process("p4", Color.yellow, 0, 1, 5, 4, 43);
+        Process p5 = new Process("p5", Color.gray, 0, 5, 2, 4, 43);
 
-
-
-        Process p1 = new Process("p1", Color.red, 0, 17, 4, 4, 20);
-        Process p2 = new Process("p2",  Color.green, 3, 6, 9, 4, 17);
-        Process p3 = new Process("p3",  Color.black, 4, 10, 2, 4, 16);
-        Process p4 = new Process("p4",  Color.yellow, 29, 4, 8, 4, 43);
         java.util.List<Process> list = new ArrayList<>();
         list.add(p1);
         list.add(p2);
         list.add(p3);
         list.add(p4);
+        list.add(p5);
+
 
         String algorithmName;
         algorithmName = scanner.nextLine();
@@ -90,33 +97,36 @@ public class SchedulerSimulation {
         double avgTurnaroundTime = 0;
         Vector<Color> processesColor = processesColor(list);
         Map<Process, List<Interval>> intervals = null;
-        Object[][] rows = new Object[list.size()][];
+        Object[][] rows;
 
-        if(algorithmName.equals("AG")){
+        if (algorithmName.equals("AG")) {
             AGSimulator a = new AGSimulator(list);
             a.run();
             intervals = a.returnIntervals(); // AG
 
         }
-//        else if (algorithmName.equals("Pr")){
-//            PrioritySchedulingAlgorithm p = new PrioritySchedulingAlgorithm(list);
-//             intervals = p.returnIntervals();
-//        }
-        else if (algorithmName.equals("SRTF"))
-
-    {
-        SRTFAlgorithm s = new SRTFAlgorithm(list);
-        avgTurnaroundTime = s.averageTurnAroundTime;
-        avgWaitingTime = s.averageWaitingTime;
-        intervals = s.returnIntervals();
-    }
-        else if (algorithmName.equals("SJF")){
-//            SJFAlgorithm s = new SJFAlgorithm(list);
+        else if (algorithmName.equals("Pr")){
+            PrioritySchedulingAlgorithm p = new PrioritySchedulingAlgorithm(list);
+            p.simulatePriorityScheduling();
+            avgTurnaroundTime = p.averageTurnAroundTime;
+            avgWaitingTime = p.averageWaitingTime;
+            intervals = p.returnIntervals();
+        }
+        else if (algorithmName.equals("SRTF")) {
+            SRTFAlgorithm s = new SRTFAlgorithm(list);
+            avgTurnaroundTime = s.averageTurnAroundTime;
+            avgWaitingTime = s.averageWaitingTime;
 //            intervals = s.returnIntervals();
+        } else if (algorithmName.equals("SJF")) {
+            SJFAlgorithm sjf = new SJFAlgorithm(list);
+            sjf.simulateSJF();
+            avgTurnaroundTime = sjf.averageTurnaroundTime;
+            avgWaitingTime = sjf.averageWaitingTime;
+            intervals = sjf.returnIntervals();
         }
 
         rows = returnRows(intervals);
-        cpuSchedulingSimulator.excute(algorithmName, avgTurnaroundTime, avgWaitingTime, rows,intervals, processesColor);
+        cpuSchedulingSimulator.excute(algorithmName, avgTurnaroundTime, avgWaitingTime, rows, intervals, processesColor);
     }
 
 }

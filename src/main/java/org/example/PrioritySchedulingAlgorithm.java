@@ -3,15 +3,16 @@ package org.example;
 import java.util.*;
 
 public class PrioritySchedulingAlgorithm {
-    static Map<Process, List<Interval>> intervals = new HashMap<>();
+    List<Process> processes;
+    Process[] timeProcesses = new Process[1000];
     public double averageWaitingTime;
     public double averageTurnAroundTime;
 
-    public PrioritySchedulingAlgorithm(List<Process> list, int i) {
-        simulatePriorityScheduling(list, i);
+    public PrioritySchedulingAlgorithm(List<Process> processes) {
+        this.processes = processes;
     }
 
-    private static void simulatePriorityScheduling(List<Process> processes, int contextSwitchingTime) {
+    public void simulatePriorityScheduling() {
         int currentTime = 0;
         int totalWaitingTime = 0;
         int totalTurnaroundTime = 0;
@@ -42,6 +43,7 @@ public class PrioritySchedulingAlgorithm {
             }
 
             if (currentProcess != null) {
+                timeProcesses[currentTime] = currentProcess;
 
                 currentProcess.waitingTime = currentTime - currentProcess.arrivalTime;
 
@@ -51,12 +53,12 @@ public class PrioritySchedulingAlgorithm {
                 totalTurnaroundTime += currentProcess.turnaroundTime;
 
                 currentTime += currentProcess.burstTime;
-
+                currentProcess.endTime = currentTime;
                 processes.remove(currentProcess);
 
-                Interval interval = new Interval(currentTime - currentProcess.burstTime, currentTime);
-                List<Interval> processIntervals = intervals.computeIfAbsent(currentProcess, k -> new ArrayList<>());
-                processIntervals.add(interval);
+//                Interval interval = new Interval(currentTime - currentProcess.burstTime, currentTime);
+//                List<Interval> processIntervals = intervals.computeIfAbsent(currentProcess, k -> new ArrayList<>());
+//                processIntervals.add(interval);
 
                 System.out.println("Process " + currentProcess.name + " executed from " +
                         (currentTime - currentProcess.burstTime) + " to " + currentTime);
@@ -65,6 +67,7 @@ public class PrioritySchedulingAlgorithm {
             } else {
                 currentTime++;
             }
+
         }
 
         double avgWaitingTime = processedProcesses > 0 ? (double) totalWaitingTime / processedProcesses : 0;
@@ -76,6 +79,30 @@ public class PrioritySchedulingAlgorithm {
     }
 
     public Map<Process, List<Interval>> returnIntervals() {
+        Map<Process, List<Interval>> intervals = new HashMap<>();
+
+        for (int i = 0; i < timeProcesses.length; i++) {
+            Process currentProcess = timeProcesses[i];
+
+            if (currentProcess != null) {
+                if (!intervals.containsKey(currentProcess)) {
+                    intervals.put(currentProcess, new ArrayList<>());
+                }
+
+                List<Interval> processIntervals = intervals.get(currentProcess);
+                if (!processIntervals.isEmpty() && processIntervals.get(processIntervals.size() - 1).getEnd() == i - 1) {
+                    processIntervals.get(processIntervals.size() - 1).setEnd(i);
+                } else {
+                    processIntervals.add(new Interval(i, currentProcess.endTime));
+                }
+            }
+        }
+
+        for (Map.Entry<Process, List<Interval>> entry : intervals.entrySet()) {
+            for (Interval interval : entry.getValue()) {
+                System.out.println(entry.getKey().name + " : " + interval.getStart() + " - " + interval.getEnd());
+            }
+        }
         return intervals;
     }
 }
