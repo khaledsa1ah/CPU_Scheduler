@@ -72,22 +72,22 @@ public class SchedulerSimulation {
 //        AGSimulator a = new AGSimulator(processes);
 
 
-//        Process p1 = new Process("p1", Color.red, 0, 17, 4, 4, 20);
-//        Process p2 = new Process("p2", Color.green, 3, 6, 9, 4, 17);
-//        Process p3 = new Process("p3", Color.black, 4, 10, 2, 4, 16);
-//        Process p4 = new Process("p4", Color.yellow, 29, 4, 8, 4, 43);
-        Process p1 = new Process("p1", Color.red, 0, 10, 3, 4, 20);
-        Process p2 = new Process("p2", Color.green, 0, 1, 1, 4, 17);
-        Process p3 = new Process("p3", Color.black, 0, 2, 4, 4, 16);
-        Process p4 = new Process("p4", Color.yellow, 0, 1, 5, 4, 43);
-        Process p5 = new Process("p5", Color.gray, 0, 5, 2, 4, 43);
+        Process p1 = new Process("p1", Color.red, 0, 17, 4, 4, 20);
+        Process p2 = new Process("p2", Color.green, 3, 6, 9, 4, 17);
+        Process p3 = new Process("p3", Color.black, 4, 10, 2, 4, 16);
+        Process p4 = new Process("p4", Color.yellow, 29, 4, 8, 4, 43);
+//        Process p1 = new Process("p1", Color.red, 0, 10, 3, 4, 20);
+//        Process p2 = new Process("p2", Color.green, 0, 1, 1, 4, 17);
+//        Process p3 = new Process("p3", Color.black, 0, 2, 4, 4, 16);
+//        Process p4 = new Process("p4", Color.yellow, 0, 1, 5, 4, 43);
+//        Process p5 = new Process("p5", Color.gray, 0, 5, 2, 4, 43);
 
         java.util.List<Process> list = new ArrayList<>();
         list.add(p1);
         list.add(p2);
         list.add(p3);
         list.add(p4);
-        list.add(p5);
+//        list.add(p5);
 
 
         String algorithmName;
@@ -102,6 +102,8 @@ public class SchedulerSimulation {
         if (algorithmName.equals("AG")) {
             AGSimulator a = new AGSimulator(list);
             a.run();
+            avgTurnaroundTime = a.averageTurnaroundTIme;
+            avgWaitingTime = a.averageWaitingTime;
             intervals = a.returnIntervals(); // AG
 
         }

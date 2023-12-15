@@ -6,12 +6,14 @@ import java.util.List;
 
 
 public class AGSimulator {
+    Map<String,Integer> map = new HashMap<>();
     List<Process> processes;
     List<Process> readyQueue = new ArrayList<>();
     Process[] timeProcesses = new Process[1000];
     List<Process> dieList = new ArrayList<>();
     static int currentTime = 0;
 
+    double averageWaitingTime = 0, averageTurnaroundTIme = 0;
     public AGSimulator(List<Process> processes) {
         this.processes = processes;
     }
@@ -19,10 +21,13 @@ public class AGSimulator {
 
 
     public void run(){
-
         processes.sort(Comparator.comparingInt(p -> p.arrivalTime));
 
+        for (int i = 0; i < processes.size(); i++)
+            map.put(processes.get(i).name, processes.get(i).burstTime);
 
+        List<Process> tempProcesses = new ArrayList<>();
+        tempProcesses.addAll(processes);
         while (!processes.isEmpty()){
             for (int i = 0; i < processes.size(); i++) {
                 if(processes.get(i).burstTime > 0){
@@ -33,6 +38,14 @@ public class AGSimulator {
                 }
             }
         }
+        // Calculate average waiting time, average turnaroundTime
+        for (int i = 0; i < dieList.size(); i++){
+            averageTurnaroundTIme+=dieList.get(i).turnaroundTime;
+            averageWaitingTime+=dieList.get(i).waitingTime;
+        }
+
+        averageTurnaroundTIme/=dieList.size();
+        averageWaitingTime/=dieList.size();
     }
 
 
@@ -71,8 +84,10 @@ public class AGSimulator {
 
                 p.endTime = currentTime;
                 p.turnaroundTime = p.endTime - p.arrivalTime;
+                p.waitingTime += p.turnaroundTime-map.get(p.name);
 //                    while (!readyQueue.isEmpty() && readyQueue.get(0).burstTime == 0)
 //                        readyQueue.remove(0);
+
                 if(!readyQueue.isEmpty()){
                     Process tempProcess = readyQueue.get(0);
                     readyQueue.remove(0);
@@ -125,6 +140,7 @@ public class AGSimulator {
 
                 p.endTime = currentTime;
                 p.turnaroundTime = p.endTime - p.arrivalTime;
+                p.waitingTime += p.turnaroundTime-map.get(p.name);
 //                while (!readyQueue.isEmpty() && readyQueue.get(0).burstTime == 0)
 //                    readyQueue.remove(0);
 
